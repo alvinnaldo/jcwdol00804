@@ -18,7 +18,7 @@ module.exports = {
       return new Promise(async (resolve, reject) => {
         try {
           const res = await dbQuery(
-            `SELECT b.id, e.name AS user_name, c.product_img, d.name AS branch_name, a.quantity, b.status, b.invoice_no, b.created_at, c.name, SUM(a.quantity * c. price) AS total_purchased, COUNT(a.id) AS total_items FROM order_item a JOIN JCWDOL00804.order b ON a.order_id = b.id JOIN product c ON c.id = a.product_id JOIN branch d ON c.branch_id = d.id JOIN user e ON b.user_id = e.id WHERE d.id = ${
+            `SELECT b.id, MAX(e.name) AS user_name, MAX(c.product_img) AS product_img, MAX(d.name) AS branch_name, MAX(a.quantity) AS quantity, MAX(b.status) AS status, MAX(b.invoice_no) AS invoice_no, MAX(b.created_at) AS created_at, MAX(c.name) AS name, SUM(a.quantity * c.price) AS total_purchased, COUNT(a.id) AS total_items FROM order_item a JOIN JCWDOL00804.order b ON a.order_id = b.id JOIN product c ON c.id = a.product_id JOIN branch d ON c.branch_id = d.id JOIN user e ON b.user_id = e.id WHERE d.id = ${
               req.decript.branch_id
             } AND b.invoice_no LIKE '%${inv}%' AND b.status LIKE '%${status}%' AND e.name LIKE '%${user_name}%' AND b.created_at >= '${start_date} 00:00:00' AND b.created_at <= '${end_date} 23:59:59' GROUP BY b.id HAVING total_items <> 0 ORDER BY b.${sort_by} ${
               order === "true"
@@ -40,7 +40,7 @@ module.exports = {
       return new Promise(async (resolve, reject) => {
         try {
           const res = await dbQuery(
-            `SELECT b.id, e.name AS user_name, c.product_img, d.name AS branch_name, a.quantity, b.status, b.invoice_no, b.created_at, c.name, SUM(a.quantity * c. price) AS total_purchased, COUNT(a.id) AS total_items
+            `SELECT b.id, MAX(e.name) AS user_name, MAX(c.product_img) AS product_img, MAX(d.name) AS branch_name, MAX(a.quantity) AS quantity, MAX(b.status) AS status, MAX(b.invoice_no) AS invoice_no, MAX(b.created_at) AS created_at, MAX(c.name) AS name, SUM(a.quantity * c.price) AS total_purchased, COUNT(a.id) AS total_items
                         FROM order_item a
                         JOIN JCWDOL00804.order b ON a.order_id = b.id
                         JOIN product c ON c.id = a.product_id
