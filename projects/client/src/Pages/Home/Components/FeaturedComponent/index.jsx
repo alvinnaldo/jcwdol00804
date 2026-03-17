@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { API_URL } from "../../../../helper";
 import { Link } from "react-router-dom";
-import img from "../../../../Assets/default.png";
+// import img from "../../../../Assets/default.png";
 
 const FeaturedComponent = ({ branchName }) => {
   const [products, setProducts] = useState([]);
@@ -16,7 +16,8 @@ const FeaturedComponent = ({ branchName }) => {
         setProducts(data.data);
       }
     } catch (error) {
-      alert(error.response.data.message);
+      console.log(error.response.data.message);
+      alert(error.response.data.message.code);
     }
   };
 
@@ -35,7 +36,7 @@ const FeaturedComponent = ({ branchName }) => {
                         h-44 w-32 bg-white text-xs m-2
                         hover:border border-[#86C649]"
             >
-              <img className="h-20 w-20 mx-auto my-2" src={img} alt="img" />
+              <img className="h-20 w-20 mx-auto my-2" src={`http://localhost:8000/${product.product_img}`} alt="img" />
               <div className="text-center text-xs text-[#86C649]">
                 Rp. {product.price.toLocaleString()},-
               </div>
@@ -43,7 +44,7 @@ const FeaturedComponent = ({ branchName }) => {
                 {product.name}
               </div>
               <div className="text-center text-xs text-gray-500 font-light">
-                {product.weight} gram
+                {Math.ceil(product.weight)} gram
               </div>
             </div>
           </div>

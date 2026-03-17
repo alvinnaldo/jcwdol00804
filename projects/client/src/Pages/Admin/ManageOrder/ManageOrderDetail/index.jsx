@@ -42,7 +42,7 @@ const ManageOrderDetail = () => {
 
   const getDetail = async () => {
     let promise1 = axios.get(
-      `${API_URL}/transaction/order-list-super-admin/${id}`
+      `${API_URL}/transaction/order-list-branch-admin/${id}`
     );
     let promise2 = axios.get(`${API_URL}/transaction/get-product-info/${id}`);
 
@@ -249,19 +249,19 @@ const ManageOrderDetail = () => {
               </span>
             </div>
             <div className="h-[1px] bg-slate-200 w-[95%] mt-1 ml-3"></div>
-            {productInfo.map((value) => (
+            {productInfo.map((value,idx) => (
               <div
-                key={value.id}
+                key={idx}
                 className="flex flex-row items-center justify-between px-5"
               >
                 <div className="flex flex-row items-center mt-1 ">
                   <img
-                    src={`https://jcwdol00804.purwadhikabootcamp.com/${value.product_img}`}
+                    src={`http://localhost:8000/${value.product_img}`}
                     alt={value.name}
                     className=" w-12 h-12 mt-2 border text-xs"
                   />
                   <div className="flex flex-col ml-2">
-                    <span className="font-bold text-sm w-[210px] mt-3">
+                    <span className="font-bold text-sm w-[210px] mt-3" class="overflow-hidden">
                       {value.name}
                     </span>
                     <span className="text-[#6CC51D] font-bold text-sm">

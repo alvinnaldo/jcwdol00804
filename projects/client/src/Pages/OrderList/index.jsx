@@ -62,7 +62,6 @@ const OrderList = () => {
         }
       )
       .then((res) => {
-        console.log(res.data);
         setOrderList(res.data.result);
         setLimit(res.data.limit);
         setCountResult(res.data.allResult.length);
@@ -233,8 +232,8 @@ const OrderList = () => {
                 <div
                   className={
                     ["Menunggu Pembayaran", "Dibatalkan"].includes(val.status)
-                      ? "text-xs bg-red-300 bg-opacity-40 text-red-500 p-1 rounded-lg font-semibold"
-                      : "text-xs bg-lime-300 bg-opacity-40 text-[#6CC51D] p-1 rounded-lg font-semibold"
+                      ? "text-center text-xs bg-red-300 bg-opacity-40 text-red-500 p-2 m-3 rounded-lg font-semibold"
+                      : "text-center text-xs bg-lime-300 bg-opacity-40 text-[#6CC51D] p-1 m-3 rounded-lg font-semibold"
                   }
                 >
                   {val.status}
@@ -246,7 +245,7 @@ const OrderList = () => {
               </div>
               <div className="flex flex-row px-3 items-center">
                 <img
-                  src={`https://jcwdol00804.purwadhikabootcamp.com/${val.product_img}`}
+                  src={`http://localhost:8000/${val.product_img}`}
                   alt=""
                   className=" w-12 h-12 mt-2 border text-xs"
                 />

@@ -52,6 +52,7 @@ const AddProduct = () => {
                 "image/gif",
                 "image/webp",
                 "image/bmp",
+                "image/avif"
               ].includes(value.type)
             : true
         )
@@ -59,7 +60,7 @@ const AddProduct = () => {
       category: Yup.mixed()
         .oneOf([...categoryList.map((val) => val.name)])
         .required(),
-      product_name: Yup.string().required(),
+      product_name: Yup.string().max(45, "Max character 45").required("product name is required"),
       description: Yup.string().max(255, "Max character 255").nullable(),
       price: Yup.number().required(),
       weight: Yup.number().required(),
@@ -100,7 +101,10 @@ const AddProduct = () => {
             toast.success(res.data.message);
             formik.resetForm();
           })
-          .catch((err) => toast.error(err.response.data.message));
+          .catch((err) => {
+            console.log(err.response.data.message);
+            toast.error(err.response.data.message);
+          });
       }
     },
   });

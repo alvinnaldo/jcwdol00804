@@ -37,7 +37,7 @@ module.exports = {
     return multer({
       storage: storageUploader,
       fileFilter: (req, file, cb) => {
-        const extFilter = /\.(gif|jpe?g|png|webp|bmp)/;
+        const extFilter = /\.(gif|jpe?g|png|webp|bmp|avif)/;
         let check = file.originalname.toLowerCase().match(extFilter);
         if (check) {
           cb(null, true);
@@ -78,7 +78,7 @@ module.exports = {
     return multer({
       storage: storageUploader,
       fileFilter: (req, file, cb) => {
-        const extFilter = /\.(jpe?g|png)/;
+        const extFilter = /\.(jpe?g|png|avif)/;
         let check = file.originalname.toLowerCase().match(extFilter);
         if (check) {
           cb(null, true);
@@ -119,7 +119,7 @@ module.exports = {
     return multer({
       storage: storageUploader,
       fileFilter: (req, file, cb) => {
-        const extFilter = /\.(jpe?g|png)/;
+        const extFilter = /\.(jpe?g|png|avif)/;
         let check = file.originalname.toLowerCase().match(extFilter);
         if (check) {
           cb(null, true);

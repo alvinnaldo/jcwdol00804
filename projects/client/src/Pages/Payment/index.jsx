@@ -109,7 +109,7 @@ const Payment = () => {
             </div>
             <div className="text-[#86C649] text-xl text-center px-5 font-bold">
               Total Payment : Rp.
-              {paymentDetail.total_purchased?.toLocaleString("id")},-
+              {Number(paymentDetail.total_purchased).toLocaleString('id')},-
             </div>
           </div>
           {/* Time limit */}

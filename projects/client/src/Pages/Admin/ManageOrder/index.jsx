@@ -93,44 +93,6 @@ const ManageOrder = () => {
     page,
   ]);
 
-  useEffect(() => {
-    axios
-      .get(
-        `${API_URL}/transaction/order-list-branch-admin?inv=${invoiceNo}&user_name=${nameValue}&status=${status}&start_date=${format(
-          dateRange[0].startDate,
-          "yyyy-MM-dd"
-        )}&end_date=${format(
-          dateRange[0].endDate,
-          "yyyy-MM-dd"
-        )}&sort_by=${sortBy}&order=${
-          sortBy === "invoice_no" ? sortInvAsc : sortDateNewest
-        }&page=${page}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
-      .then((res) => {
-        setOrderList(res.data.result);
-        setLimit(res.data.limit);
-        setCountResult(res.data.allResult.length);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [
-    sortDateNewest,
-    sortInvAsc,
-    invoiceNo,
-    nameValue,
-    status,
-    dateRange,
-    token,
-    sortBy,
-    page,
-  ]);
-
   return (
     <PageAdmin>
       {/* If no product found */}
@@ -311,9 +273,8 @@ const ManageOrder = () => {
           <div>
             {orderList.map((val, idx) => {
               return (
-                <div className="flex flex-col w-full">
+                <div key={idx} className="flex flex-col w-full">
                   <div
-                    key={idx}
                     onClick={() => navigate(`/admin/manage-order/${val.id}`)}
                     className="rounded-xl shadow-md border w-full py-2 mb-2 hover:bg-gray-100 cursor-pointer"
                   >
@@ -354,8 +315,8 @@ const ManageOrder = () => {
                       <div className="flex justify-right">
                         <div className="flex flex-row px-3 items-center">
                           <img
-                            src={`https://jcwdol00804.purwadhikabootcamp.com/${val.product_img}`}
-                            alt=""
+                            src={`http://localhost:8000/${val.product_img}`}
+                            alt={val.name}
                             className=" w-12 h-12 mt-2 border text-xs"
                           />
                           <div className="flex flex-col ml-2 mt-1 truncate">
@@ -378,7 +339,7 @@ const ManageOrder = () => {
                     <div className="px-3 mt-1 text-sm text-center">
                       <span className="font-bold">Total Purchase : </span>
                       <span className="font-bold text-[#6CC51D]">
-                        Rp {val.total_purchased.toLocaleString("id")}
+                        Rp {val.total_purchased.toLocaleString('id')}
                       </span>
                     </div>
                   </div>

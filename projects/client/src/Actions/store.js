@@ -7,7 +7,7 @@ export const changeStoreAction = (data) => {
 
 export const setDefaultStore = () => {
   return {
-    type: "CHANGE_STORE",
-    payload: { defaultStore: "Xmart Jakarta" },
+    type: "SET_DEFAULT",
+    payload: { defaultStore: "Xmart SCBD" },
   };
 };

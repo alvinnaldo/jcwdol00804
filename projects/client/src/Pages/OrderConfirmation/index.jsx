@@ -8,7 +8,7 @@ import ModalCourier from "./ModalCourier";
 import axios from "axios";
 import { API_URL } from "../../helper";
 import toast, { Toaster } from "react-hot-toast";
-import { BsValentine2 } from "react-icons/bs";
+// import { BsValentine2 } from "react-icons/bs";
 
 const OrderConfirmation = () => {
   const location = useLocation();
@@ -22,6 +22,7 @@ const OrderConfirmation = () => {
   const [isSubmitting, setisSubmitting] = useState(false);
 
   const token = localStorage.getItem("xmart_login");
+
   useEffect(() => {
     axios
       .get(`${API_URL}/address/my-address`, {
@@ -90,8 +91,8 @@ const OrderConfirmation = () => {
         {
           items: location.state.items,
           address_id: address.id,
-          courier: `${courier.name} - ${courier.description} (${courier.service}) - ETA : ${courier.cost[0].etd}`,
-          shipping_cost: courier.cost[0].value,
+          courier: `${courier.name} - ${courier.description} (${courier.service}) - ETA : ${courier.etd}`,
+          shipping_cost: courier.cost,
         },
         {
           headers: {
@@ -102,7 +103,7 @@ const OrderConfirmation = () => {
       Promise.all([promise1, promise2, promise3])
         .then((res) => {
           setisSubmitting(false);
-          navigate(`/order-detail/${res[2].data.data}`, { replace: true });
+          navigate(`/order-detail/${res[2].data.data}`, { replace: true , state : {}});
         })
         .catch((err) => console.log(err));
     } else {
@@ -153,7 +154,7 @@ const OrderConfirmation = () => {
                 >
                   <div className="flex flex-row items-center mt-1 ">
                     <img
-                      src={`https://jcwdol00804.purwadhikabootcamp.com/${BsValentine2.product_img}`}
+                      src={`http://localhost:8000/${val2.product_img}`}
                       alt={val2.name}
                       className=" w-12 h-12 mt-2 border text-xs"
                     />
@@ -225,8 +226,8 @@ const OrderConfirmation = () => {
                     <div className="mt-2 font-bold">{courier.name}</div>
                     <div>
                       {courier.description} ({courier.service}) - Rp{" "}
-                      {courier.cost[0].value.toLocaleString("id")} (ETA :{" "}
-                      {courier.cost[0].etd})
+                      {courier.cost.toLocaleString("id")} (ETA :{" "}
+                      {courier.etd})
                     </div>
                   </>
                 )}
@@ -264,7 +265,7 @@ const OrderConfirmation = () => {
                 <span>
                   Rp{" "}
                   {Object.keys(courier).length !== 0
-                    ? courier.cost[0].value.toLocaleString("id")
+                    ? courier.cost.toLocaleString("id")
                     : 0}
                 </span>
               </div>
@@ -287,7 +288,7 @@ const OrderConfirmation = () => {
                   : (
                       location.state.totalPrice +
                       (Object.keys(courier).length !== 0 &&
-                        courier.cost[0].value)
+                        courier.cost)
                     ).toLocaleString("id")}
               </span>
             </div>

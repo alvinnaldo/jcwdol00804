@@ -77,6 +77,7 @@ const EditProduct = () => {
                 "image/gif",
                 "image/webp",
                 "image/bmp",
+                "image/avif"
               ].includes(value.type)
             : true
         )
@@ -84,7 +85,7 @@ const EditProduct = () => {
       category: Yup.mixed()
         .oneOf([...categoryList.map((val) => val.name)])
         .required(),
-      product_name: Yup.string().required(),
+      product_name: Yup.string().required("product name is required"),
       description: Yup.string().max(255, "Max character 255").nullable(),
       price: Yup.number().required(),
       weight: Yup.number().required(),
@@ -100,7 +101,7 @@ const EditProduct = () => {
               Authorization: `Bearer ${token}`,
             },
           })
-          .then(() => {
+          .then((res) => {
             axios
               .patch(
                 `${API_URL}/product/admin/edit-product-img/${id}`,
@@ -111,7 +112,10 @@ const EditProduct = () => {
                   },
                 }
               )
-              .then(() => navigate("/admin/manage-product"))
+              .then(() => {
+                navigate("/admin/manage-product");
+                toast.success(res.data.message);
+              })
               .catch((err) => console.log(err));
           })
           .catch((err) => toast.error(err.response.data.message));
@@ -122,9 +126,10 @@ const EditProduct = () => {
               Authorization: `Bearer ${token}`,
             },
           })
-          .then(() => {
-            navigate("/admin/manage-product");
-          })
+          .then((res) => {
+                navigate("/admin/manage-product");
+                toast.success(res.data.message);
+              })
           .catch((err) => toast.error(err.response.data.message));
       }
     },
@@ -154,7 +159,7 @@ const EditProduct = () => {
                 productImg
                   ? !formik.errors.product_img && formik.values.product_img
                     ? URL.createObjectURL(formik.values.product_img)
-                    : `https://jcwdol00804.purwadhikabootcamp.com/${productImg}`
+                    : `http://localhost:8000/${productImg}`
                   : !formik.errors.product_img && formik.values.product_img
                   ? URL.createObjectURL(formik.values.product_img)
                   : addImage

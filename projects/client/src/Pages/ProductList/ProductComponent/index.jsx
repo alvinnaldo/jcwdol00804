@@ -9,7 +9,7 @@ import {
   TbSortDescendingNumbers,
   TbSortAscendingNumbers,
 } from "react-icons/tb";
-import img from "../../../Assets/default.png";
+// import img from "../../../Assets/default.png";
 import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { changeStoreAction, setDefaultStore } from "../../../Actions/store";
@@ -61,6 +61,7 @@ const ProductComponent = () => {
         setLimit(data.limit);
       }
     } catch (error) {
+      console.log(error.response);
       setProducts([]);
       setCountResult(0);
     }
@@ -325,7 +326,7 @@ const ProductComponent = () => {
                             hover:border border-[#86C649]"
               >
                 <Link to={`/product-detail/${product.id}`}>
-                  <img className="h-20 w-20 mx-auto mt-1" src={img} alt="img" />
+                  <img className="h-20 w-20 mx-auto mt-1" src={`http://localhost:8000/${product.product_img}`} alt="img" />
                   <div className="text-center text-sm font-medium product-name h-10">
                     {product.name}
                   </div>

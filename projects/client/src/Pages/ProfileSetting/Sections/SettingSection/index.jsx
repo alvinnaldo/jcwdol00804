@@ -10,7 +10,7 @@ const SettingSection = () => {
   const navigate = useNavigate();
 
   const logoutClick = () => {
-    localStorage.removeItem("xmart_login");
+    // localStorage.removeItem("xmart_login");
     dispatch(logoutAction());
     navigate("/sign-in");
   };
@@ -43,7 +43,7 @@ const SettingSection = () => {
         <div className="my-auto pl-2 pr-36">My Address</div>
         <IoIosArrowForward className="my-auto" size={22} />
       </Link>
-      <button className="flex justify-between px-2 font-semibold my-3">
+      <button className="flex justify-between px-2 font-semibold my-3" onClick={logoutClick}>
         <BiLogOutCircle className="my-auto" size={25} />
         <div className="my-auto pr-40">Sign out</div>
         <IoIosArrowForward

@@ -3,13 +3,7 @@ const { db, dbQuery } = require("../config/db");
 module.exports = {
   getCartList: (req, res) => {
     db.query(
-      `SELECT y.*, z.name, z.description, z.price, z.stock, z.weight, z.category_id, z.product_img, z.is_delete, b.name as branch_name, b.city as branch_cityname 
-      FROM cart x
-      JOIN cart_item y ON x.user_id = y.cart_id 
-      JOIN product z ON y.product_id = z.id 
-      JOIN branch b ON z.branch_id = b.id 
-      WHERE x.user_id = ${req.decript.id} 
-      AND y.is_delete = 0;`,
+      `SELECT y.*, z.name, z.description, z.price, z.stock, z.weight, z.category_id, z.product_img, z.is_delete, b.name as branch_name, b.city as branch_cityname FROM cart x JOIN cart_item y ON x.id = y.cart_id JOIN product z ON y.product_id = z.id JOIN branch b ON z.branch_id = b.id WHERE x.user_id = ${req.decript.id} AND y.is_delete = 0;`,
       (err, result) => {
         if (err) {
           return res.status(404).send({
@@ -41,9 +35,10 @@ module.exports = {
                 message: err2,
               });
             }
+            // Use result2.insertId which contains the ID of the newly inserted cart
             db.query(
               `UPDATE user SET ? WHERE id=${result[0].id}`,
-              { cart_id: result[0].id },
+              { cart_id: result2.insertId },
               (err3, result3) => {
                 if (err3) {
                   return res.status(500).send({
@@ -53,7 +48,7 @@ module.exports = {
                 }
                 return res.status(200).send({
                   success: true,
-                  message: "Initiallized New Cart for New User",
+                  message: "Initialized New Cart for New User",
                 });
               }
             );

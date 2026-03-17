@@ -1,4 +1,5 @@
-require("dotenv/config");
+const path = require("path");
+require("dotenv").config({path : path.join(__dirname, "../.env")});
 const express = require("express");
 const cors = require("cors");
 const { join } = require("path");
@@ -108,9 +109,10 @@ app.get("*", (req, res) => {
 // Db connection
 db.getConnection((err, connection) => {
   if (err) {
-    console.log("MySQL Connection Error", err.sqlMessage);
+    console.log("MySQL Connection Error", err);
   }
-  console.log("MySQL Connection Success ✅", connection.threadId);
+  console.log("MySQL Connection Success ✅");
+  connection.release();
 });
 
 //#endregion

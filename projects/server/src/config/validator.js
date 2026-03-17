@@ -291,7 +291,7 @@ module.exports = {
         .isIn(categoryList.map((val) => val.category_name))
         .notEmpty()
         .run(req);
-      await check("product_name").isString().notEmpty().run(req);
+      await check("product_name").isString().isLength({max : 45}).notEmpty().run(req);
       await check("description")
         .isString()
         .isLength({ max: 255 })

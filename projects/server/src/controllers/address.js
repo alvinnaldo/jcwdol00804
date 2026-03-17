@@ -1,7 +1,6 @@
-const request = require("request");
+const axios = require('axios');
 const { db, dbQuery } = require("../config/db");
 const { geocode } = require("opencage-api-client");
-const e = require("express");
 
 module.exports = {
   // Get Address
@@ -138,48 +137,29 @@ module.exports = {
   },
   getAvailableCourier: async (req, res) => {
     try {
-      const { origin, destination, weight } = req.query;
-      const getCourier = (courier) => {
-        return new Promise(async (resolve, reject) => {
-          try {
+            const { origin, destination, weight } = req.query;
             const originCity = await dbQuery(
-              `SELECT id from cities_data WHERE name=${db.escape(origin)}`
+              `SELECT city_id from cities_data WHERE name=${db.escape(origin)}`
             );
             const destinationCity = await dbQuery(
-              `SELECT id from cities_data WHERE name=${db.escape(destination)}`
+              `SELECT city_id from cities_data WHERE name=${db.escape(destination)}`
             );
-            let options = {
-              method: "POST",
-              url: "https://api.rajaongkir.com/starter/cost",
-              headers: { key: process.env.RAJAONGKIR_KEY },
-              form: {
-                origin: String(originCity[0].id),
-                destination: String(destinationCity[0].id),
-                weight: Number(weight),
-                courier,
-              },
+            const url = "https://rajaongkir.komerce.id/api/v1/calculate/district/domestic-cost";
+            let body = {
+                origin: originCity[0].city_id,
+                destination: destinationCity[0].city_id,
+                weight: weight,
+                courier : 'jne:pos:tiki',
+                price : 'lowest'
             };
-            request(options, (err, response, body) => {
-              if (err) throw new Error(err);
-              const data = JSON.parse(body).rajaongkir.results[0];
-              resolve(data);
-            });
-          } catch (error) {
-            reject(error);
-          }
-        });
-      };
-      let courier = ["jne", "pos", "tiki"];
-      Promise.all(
-        courier.map(async (val) => {
-          const data = await getCourier(val);
-          return data;
-        })
-      ).then((results) => {
-        return res.status(200).send(results);
-      });
-    } catch (error) {
-      return res.status(500).send(error);
+            let result = await axios.post(url, new URLSearchParams(body), {
+              headers : {
+                key : process.env.RAJAONGKIR_KEY
+              }
+            })
+            return res.status(200).send(result.data.data); 
+    } catch (error) { 
+            return res.status(500).send(error);
     }
   },
   getDetailAddress: (req, res) => {

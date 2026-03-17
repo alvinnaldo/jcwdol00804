@@ -8,7 +8,7 @@ module.exports = {
     let query = `SELECT p.id, p.name, p.stock as latest_stock, sum(s.quantity_change) as total_quantity_change, (p.stock - sum(s.quantity_change)) as initial_stock FROM product p 
     JOIN stock_history s ON p.id = s.product_id
     WHERE p.branch_id = ${req.decript.branch_id} AND p.name LIKE '%${search}%' AND s.created_at >= '${start_date} 00:00:00' AND s.created_at <= '${end_date} 23:59:59'
-    GROUP BY p.name ORDER BY p.name ASC`;
+    GROUP BY p.id, p.name ORDER BY p.name ASC`;
     let pagination = `LIMIT ${limit} OFFSET ${offset}`;
     db.query(query + " " + pagination, (err, results) => {
       if (err) {
@@ -112,7 +112,7 @@ module.exports = {
         }
         return result;
       };
-      db.query(`SELECT DATE_FORMAT(b.updated_at, '%b %Y') AS date, SUM((c.price*a.quantity)) as total_sales FROM order_item a JOIN JCWDOL00804.order b ON a.order_id = b.id JOIN product c ON a.product_id = c.id WHERE c.branch_id = ${branch_id} AND b.status IN ('Menunggu Pembayaran', 'Menunggu Konfirmasi', 'Dibatalkan') AND b.updated_at > DATE_SUB(now(),INTERVAL ${manyMonth} MONTH) GROUP by date`,
+      db.query(`SELECT DATE_FORMAT(b.updated_at, '%b %Y') AS date, SUM((c.price*a.quantity)) as total_sales FROM order_item a JOIN JCWDOL00804.order b ON a.order_id = b.id JOIN product c ON a.product_id = c.id WHERE c.branch_id = ${branch_id} AND b.status IN ('Dikirim', 'Selesai') AND b.updated_at > DATE_SUB(now(),INTERVAL ${manyMonth} MONTH) GROUP by date`,
         (err, results) => {
           if (err) {
             return res.status(500).send({
@@ -137,7 +137,7 @@ module.exports = {
         }
         return result;
       };
-      db.query(`SELECT DATE_FORMAT(b.updated_at, '%Y') AS date, SUM((c.price*a.quantity)) as total_sales FROM order_item a JOIN JCWDOL00804.order b ON a.order_id = b.id JOIN product c ON a.product_id = c.id WHERE c.branch_id = ${branch_id} AND b.status IN ('Menunggu Pembayaran', 'Menunggu Konfirmasi', 'Dibatalkan') AND b.updated_at > DATE_SUB(now(),INTERVAL ${manyYear} YEAR) GROUP by date`,
+      db.query(`SELECT DATE_FORMAT(b.updated_at, '%Y') AS date, SUM((c.price*a.quantity)) as total_sales FROM order_item a JOIN JCWDOL00804.order b ON a.order_id = b.id JOIN product c ON a.product_id = c.id WHERE c.branch_id = ${branch_id} AND b.status IN ('Dikirim', 'Selesai') AND b.updated_at > DATE_SUB(now(),INTERVAL ${manyYear} YEAR) GROUP by date`,
         (err, results) => {
           if (err) {
             return res.status(500).send({

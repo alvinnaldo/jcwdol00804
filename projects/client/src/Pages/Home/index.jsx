@@ -53,6 +53,7 @@ const Home = () => {
 
     const success = (pos) => {
       let crd = pos.coords;
+      console.log(pos);
       axios
         .get(
           `${API_URL}/product/get-closest-store?lat=${crd.latitude}&lng=${crd.longitude}`

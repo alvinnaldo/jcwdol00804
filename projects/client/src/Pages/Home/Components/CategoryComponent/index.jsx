@@ -16,7 +16,7 @@ const CategoryComponent = ({ branchName }) => {
         setCategoryList(data.data);
       }
     } catch (error) {
-      alert(error.response.data.message);
+      alert(error.response.data.message.code);
     }
   };
 

@@ -4,7 +4,7 @@ import axios from "axios";
 import { API_URL } from "../../../helper";
 import { AiFillPlusCircle, AiFillMinusCircle } from "react-icons/ai";
 import { BiCartAlt } from "react-icons/bi";
-import img from "../../../Assets/default.png";
+// import img from "../../../Assets/default.png";
 import toast, { Toaster } from "react-hot-toast";
 import { useSelector } from "react-redux";
 
@@ -157,7 +157,7 @@ const DetailSection = () => {
       )}
       {/* Image */}
       <div>
-        <img className="" src={img} alt="img" />
+        <img className="" src={`http://localhost:8000/${detail.product_img}`} alt="img" />
       </div>
       {/* Name & Add Items */}
       <div className="flex justify-between">
@@ -165,14 +165,16 @@ const DetailSection = () => {
         <div className="flex items-center pt-2">
           <button
             onClick={onMinus}
-            className="text-[#82CD47] hover:text-[#BFF099]"
+            className={isLogged? "text-[#82CD47] hover:text-[#BFF099]": "text-gray-200"}
+            disabled={!isLogged}
           >
             <AiFillMinusCircle size={25} />
           </button>
           <div className="font-semibold text-xl mx-5">{quantity}</div>
           <button
             onClick={onPlus}
-            className="text-[#82CD47] hover:text-[#BFF099]"
+            className={isLogged? "text-[#82CD47] hover:text-[#BFF099]": "text-gray-200"}
+            disabled={!isLogged}
           >
             <AiFillPlusCircle size={25} />
           </button>

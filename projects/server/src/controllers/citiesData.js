@@ -1,39 +1,44 @@
 const { db, dbQuery } = require("../config/db");
-const request = require("request");
 
 module.exports = {
   // Get Data From API Raja Ongkir
   addCitiesData: async (req, res) => {
     try {
-      var options = {
-        method: "GET",
-        url: "https://api.rajaongkir.com/starter/city",
-        headers: { key: process.env.RAJAONGKIR_KEY },
-      };
-      request(options, function (error, response, body) {
-        if (error) throw new Error(error);
-        const data = JSON.parse(body).rajaongkir.results;
-        const dataMap = data.map((value) => {
-          return {
-            name: value.type + " " + value.city_name,
-            province: value.province,
-          };
-        });
-        db.query(
-          `INSERT INTO cities_data (name, province) VALUES ?`,
-          [dataMap.map((value) => [value.name, value.province])],
-          (error, results) => {
-            if (error) {
-              return res.status(500).send({
-                success: false,
-                message: error,
-              });
-            } else {
-              return res.status(200).send(results);
-            }
+      const checkData = await dbQuery("SELECT MAX(id) FROM cities_data");
+      if (checkData.length) {
+        return res.status(403).send({message : "Data already exist"});
+      }
+      const data = [];
+      const urlProvince = "https://rajaongkir.komerce.id/api/v1/destination/province";
+      const options = { method: 'GET', headers: { accept: 'application/json', key: process.env.RAJAONGKIR_KEY } };
+      // fetch province data
+      const province = await fetch(urlProvince, options);
+      const listProvince = await province.json();
+      // fetch city data for each province
+      for (const val1 of listProvince.data) {
+        let urlCity = `https://rajaongkir.komerce.id/api/v1/destination/city/${val1.id}`
+        let city = await fetch(urlCity, options);
+        let listCity = await city.json();
+        // combine city and province data into array
+        for (let val2 of listCity.data) {
+          data.push([val2.id, val2.name, val1.name])
+        }
+      }
+      // insert into db
+      db.query(
+        `INSERT INTO cities_data (city_id ,name, province) VALUES ?`,
+        [data],
+        (error, results) => {
+          if (error) {
+            return res.status(500).send({
+              success: false,
+              message: error,
+            });
+          } else {
+            return res.status(200).send(results);
           }
-        );
-      });
+        }
+      );
     } catch (error) {
       return res.status(500).send(error);
     }

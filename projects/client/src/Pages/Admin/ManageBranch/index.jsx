@@ -69,7 +69,7 @@ const ManageBranch = () => {
 
     const handleBranchNameChange = (e) => {
         const selected = e.target.value;
-        if (selected === "Select Branch") {
+        if (selected === "All Branch") {
             setBranchValue("");
         } else {
             setBranchValue(selected);
@@ -118,7 +118,7 @@ const ManageBranch = () => {
                     value={branchValue}
                     onChange={handleBranchNameChange}
                 >
-                    <option value="Select Branch" className="text-slate-400">Select Branch</option>
+                    <option value="All Branch" className="text-slate-400">All Branch</option>
                     {branchList.map((branchList) => {
                         return (
                             <option key={branchList.id} value={branchList.name}>

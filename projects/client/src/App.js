@@ -39,6 +39,7 @@ import ManageProduct from "./Pages/Admin/ManageProduct";
 import AddProduct from "./Pages/Admin/AddProduct";
 import EditProduct from "./Pages/Admin/EditProduct";
 import StockMovementReport from "./Pages/Admin/StockMovementReport";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   const dispatch = useDispatch();
@@ -84,6 +85,7 @@ function App() {
 
   return (
     <>
+    <Toaster />
       {spinner ? (
         <Routes>
           {!role_id ? (

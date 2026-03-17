@@ -251,7 +251,7 @@ const ManageProduct = () => {
                     <img
                       src={
                         item.product_img
-                          ? `https://jcwdol00804.purwadhikabootcamp.com/${item.product_img}`
+                          ? `http://localhost:8000/${item.product_img}`
                           : "https://www.freeiconspng.com/thumbs/no-image-icon/no-image-icon-6.png"
                       }
                       alt={item.name}

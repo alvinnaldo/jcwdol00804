@@ -1,4 +1,5 @@
 const { db, dbQuery } = require("../config/db");
+const { format } = require("date-fns")
 
 module.exports = {
   createNewOrder: async (req, res) => {
@@ -70,7 +71,7 @@ module.exports = {
       return new Promise(async (resolve, reject) => {
         try {
           const res = await dbQuery(
-            `SELECT b.id, c.product_img, d.name AS branch_name, a.quantity, b.status, b.invoice_no, b.created_at, c.name, SUM(a.quantity * c. price) AS total_purchased, COUNT(a.id) AS total_items
+            `SELECT b.id, MAX(c.product_img) AS product_img, MAX(d.name) AS branch_name, MAX(a.quantity) AS quantity, MAX(b.status) as status, MAX(b.invoice_no) AS invoice_no, MAX(b.created_at) AS created_at, MAX(c.name) AS name, SUM(a.quantity * c.price) AS total_purchased, COUNT(a.id) AS total_items
             FROM order_item a
             JOIN JCWDOL00804.order b ON a.order_id = b.id
             JOIN product c ON c.id = a.product_id
@@ -101,7 +102,7 @@ module.exports = {
       return new Promise(async (resolve, reject) => {
         try {
           const res = await dbQuery(
-            `SELECT b.id, c.product_img, d.name AS branch_name, a.quantity, b.status, b.invoice_no, b.created_at, c.name, SUM(a.quantity * c. price) AS total_purchased, COUNT(a.id) AS total_items
+            `SELECT b.id, MAX(c.product_img) AS product_img, MAX(d.name) AS branch_name, MAX(a.quantity) as quantity, MAX(b.status) AS status, MAX(b.invoice_no) AS invoice_no, MAX(b.created_at) AS created_at, MAX(c.name) AS name, SUM(a.quantity * c.price) AS total_purchased, COUNT(a.id) AS total_items
             FROM order_item a
             JOIN JCWDOL00804.order b ON a.order_id = b.id
             JOIN product c ON c.id = a.product_id

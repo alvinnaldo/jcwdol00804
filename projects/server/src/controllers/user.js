@@ -18,9 +18,10 @@ module.exports = {
           message: "Email already exist, please use another Email",
         });
       } else {
+        console.log(name);
         db.query(
           "INSERT INTO user SET ?",
-          { name, email, phone, password: newPass },
+          { name, email, phone, password: newPass ,role_id : 1},
           (error, results, fields) => {
             if (error) throw error;
             db.query(

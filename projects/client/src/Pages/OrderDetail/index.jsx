@@ -109,10 +109,10 @@ const OrderDetail = () => {
             {productInfo.length &&
               productInfo.map((val, idx) => {
                 return (
-                  <div className="flex flex-row items-center justify-between px-5">
+                  <div key={idx} className="flex flex-row items-center justify-between px-5">
                     <div className="flex flex-row items-center mt-1 ">
                       <img
-                        src={`https://jcwdol00804.purwadhikabootcamp.com/${val.product_img}`}
+                        src={`http://localhost:8000/${val.product_img}`}
                         alt={val.name}
                         className=" w-12 h-12 mt-2 border text-xs"
                       />

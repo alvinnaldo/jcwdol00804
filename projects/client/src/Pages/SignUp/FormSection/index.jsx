@@ -32,55 +32,55 @@ const FormSection = () => {
       confirmpassword: "",
     },
     validationSchema: Yup.object({
-      name: Yup.string().required(),
+      name: Yup.string()
+        .required("Name is required")
+        .min(2, "Name should be at least 2 characters")
+        .max(45, "Name should not exceed 45 characters"),
       email: Yup.string()
-        .required()
-        .test("Unique Email", "Email already in use", (value) => {
-          return new Promise((resolve, reject) => {
-            axios
-              .get(`${API_URL}/user/unique-email/${value}`)
-              .then((res) => {
-                resolve(true);
-              })
-              .catch((error) => {
-                if (
-                  error.response.data.message ===
-                  "Email already in use. please use another email"
-                ) {
-                  resolve(false);
-                }
-              });
-          });
-        })
-        .email("Invalid email format"),
+        .required("Email is required")
+        .email("Invalid email format")
+        .test("Unique Email", "Email already in use", async (value) => {
+          if (!value) return true;
+          try {
+            await axios.get(`${API_URL}/user/unique-email/${value}`);
+            return true;
+          } catch (error) {
+            if (error.response?.data?.message === "Email already in use. please use another email") {
+              return false;
+            }
+            return true;
+          }
+        }),
       phone: Yup.string()
-        .required("phone number is a required field")
+        .required("Phone number is required")
         .matches(
-          /^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s./0-9]*$/g,
-          "Invalid phone number"
+          /^(\+62|62|0)[2-9]\d{6,10}$/,
+          "Invalid Indonesian phone number format (e.g., 081234567890 or +6281234567890)"
         ),
       password: Yup.string()
-        .required()
-        .min(8, "Should more than 8 characters")
-        .matches(/[a-z]/g, "Should contain at least 1 lower case letter")
-        .matches(/[A-Z]/g, "Should contain at least 1 upper case letter")
-        .matches(/[0-9]/g, "Should contain at least 1 number"),
+        .required("Password is required")
+        .min(8, "Should be at least 8 characters")
+        .matches(/.*[a-z].*/, "Should contain at least 1 lowercase letter")
+        .matches(/.*[A-Z].*/, "Should contain at least 1 uppercase letter")
+        .matches(/.*[0-9].*/, "Should contain at least 1 number"),
       confirmpassword: Yup.string()
-        .required("confirm password is a required field")
-        .oneOf([Yup.ref("password")], "Password doesn't match"),
+        .required("Confirm password is required")
+        .oneOf([Yup.ref("password")], "Passwords don't match"),
     }),
     onSubmit: async (values) => {
       try {
         setisSubmitting(true);
         const result = await axios.post(`${API_URL}/user/sign-up`, values);
         await axios.post(`${API_URL}/cart/add-new-cart`, {
-          email: values.email,
-        });
-        setisSubmitting(false);
-        alert(result.data.message);
-        formik.resetForm();
-        navigate("/sign-in");
+            email: values.email,
+          });
+          console.log(result);
+          setisSubmitting(false);
+          alert(result.data.message);
+          formik.resetForm();
+          navigate("/sign-in");
       } catch (error) {
+        console.log(error)
         alert(error.response.data.message);
       }
     },

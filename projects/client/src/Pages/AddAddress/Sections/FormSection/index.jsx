@@ -155,7 +155,7 @@ const FormSection = () => {
           ) : (
             <button
               className="rounded-full bg-[#82CD47] w-8/12 h-[38px] text-white mt-6 text-[22px] font-[600] leading-6 shadow-md my-10 hover:opacity-75"
-              onClick={() => navigate("/my-address")}
+              onClick={() => navigate(-1)}
             >
               Back
             </button>

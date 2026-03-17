@@ -45,7 +45,17 @@ const ModalCourier = ({
                         <div className="font-bold">{val.name}</div>
                         <div className="h-[1px] bg-slate-200 w-[95%] mt-1 ml-3"></div>
                         <div className="flex flex-col items-center mt-2">
-                          {val.costs.map((val2, idx2) => {
+                        <div
+                                className="border w-[90%] rounded-full mt-3 py-1 hover:bg-emerald-100/[.5] cursor-pointer px-3"
+                                onClick={() => {
+                                  setCourier(val);
+                                  modalOpener(!isModalCourier);
+                                }}>
+                                {val.service} - Rp{" "}
+                                {val.cost.toLocaleString("id")} (ETA :{" "}
+                                {val.etd})
+                        </div>
+                          {/* {val.costs.map((val2, idx2) => {
                             return (
                               <div
                                 key={idx2}
@@ -60,7 +70,7 @@ const ModalCourier = ({
                                 {val2.cost[0].etd})
                               </div>
                             );
-                          })}
+                          })} */}
                         </div>
                       </div>
                     );

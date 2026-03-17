@@ -33,10 +33,18 @@ const MyCart = () => {
     dispatch(getCartList());
     // eslint-disable-next-line
   }, []);
+  
+  useEffect(() => {
+    setCheckedItem(cartList.map((val,idx) => checkedItem[idx]));
+    // eslint-disable-next-line
+  }, [cartList]);
 
   useEffect(() => {
-    setCheckedItem(cartList.map((val) => false));
-  }, [cartList]);
+    setTotalPrice(cartList.reduce((total, val, idx) => {
+      return checkedItem[idx] ? (total + (val.price * val.quantity)) : total
+    },0));
+  }, [cartList, checkedItem])
+  
 
   const sumSelected = (arr) => {
     let sum = 0;
@@ -47,7 +55,7 @@ const MyCart = () => {
     }
     return sum;
   };
-
+  
   const handleChecked = (pos) => {
     const updatedCheckedItem = checkedItem.map((val, idx) => {
       return idx === pos ? !val : val;
@@ -183,7 +191,7 @@ const MyCart = () => {
                     onChange={() => handleChecked(idx2)}
                   />
                   <img
-                    src="https://www.freeiconspng.com/thumbs/no-image-icon/no-image-icon-6.png"
+                    src={`http://localhost:8000/${val2.product_img}`}
                     alt={val2.name}
                     className=" w-24 h-24 ml-2 my-2 border text-xs"
                   />
@@ -300,13 +308,13 @@ const MyCart = () => {
           totalPrice,
           shopName,
           items: checkedItem
-            .map((val, idx) => (val ? cartList[idx] : val))
-            .filter((val) => typeof val !== "boolean"),
+            .map((val, idx) => (val ? cartList[idx] : false))
+            .filter((val) => val !== false),
           totalWeight: checkedItem
             .map((val, idx) =>
-              val ? cartList[idx].weight * cartList[idx].quantity : val
+              val ? cartList[idx].weight * cartList[idx].quantity : false
             )
-            .filter((val) => typeof val !== "boolean")
+            .filter((val) => val !== false)
             .reduce((p, c) => p + c),
           shopCityName: cartList.map((val) => val.branch_cityname)[0],
         },

@@ -7,7 +7,7 @@ module.exports = {
     try {
       const { id } = req.params;
       db.query(
-        `SELECT p.id, p.name, p.description, p.price, p.stock, p.weight, b.name AS branch_id, c.name AS category_id
+        `SELECT p.id, p.name, p.product_img, p.description, p.price, p.stock, p.weight, b.name AS branch_id, c.name AS category_id
                 FROM product p
                 JOIN branch b ON p.branch_id = b.id
                 JOIN category c ON p.category_id = c.id
@@ -36,7 +36,7 @@ module.exports = {
       const { category, name, by, order, page, branch_name } = req.query;
       const limit = 10;
       const offset = (page - 1) * limit;
-      const query = `SELECT p.id, p.name, p.description, p.price, p.stock, p.weight, p.is_delete,
+      const query = `SELECT p.id, p.name, p.description, p.product_img, p.price, p.stock, p.weight, p.is_delete,
             b.name AS branch_id, c.name AS category_id
             FROM product p
             JOIN branch b ON p.branch_id = b.id
@@ -56,12 +56,12 @@ module.exports = {
               message: error,
             });
           }
-          if (!results.length) {
-            return res.status(404).send({
-              success: false,
-              message: "Product not found",
-            });
-          }
+          // if (!results.length) {
+          //   return res.status(404).send({
+          //     success: false,
+          //     message: "Product not found",
+          //   });
+          // }
           db.query(query, (error2, results2) => {
             if (error2) {
               return res.status(500).send({
@@ -87,9 +87,9 @@ module.exports = {
     try {
       const { branch_name } = req.query;
       db.query(
-        `SELECT p.id, p.name, p.price, p.weight, b.name AS branch_id from product p 
+        `SELECT p.id, p.name, p.product_img, p.price, p.weight, b.name AS branch_id from product p 
         JOIN branch b ON p.branch_id = b.id
-        WHERE is_delete=0 AND is_featured=1 AND b.name='${branch_name}'
+        WHERE p.is_delete=0 AND p.is_featured=1 AND b.name='${branch_name}'
         LIMIT 6`,
         (error, results) => {
           if (error) {
@@ -119,7 +119,15 @@ module.exports = {
               { stock: stock - quantity },
               (err, result) => {
                 if (err) throw new Error(err);
-                resolve(true);
+                db.query(`INSERT INTO stock_history SET ?`, {
+                  product_id,
+                  type : "stock_adjustment",
+                  quantity_change : Number(-quantity),
+                  description : "customer ordered"
+                },(err2, result2) => {
+                  if (err2) throw new Error(err2)
+                  resolve(true)
+                  })
               }
             );
           } catch (error) {
@@ -183,12 +191,12 @@ module.exports = {
           message: error,
         });
       }
-      if (!results.length) {
-        return res.status(404).send({
-          success: false,
-          message: "Product not found",
-        });
-      }
+      // if (!results.length) {
+      //   return res.status(404).send({
+      //     success: false,
+      //     message: "Product not found",
+      //   });
+      // }
       db.query(query, (error, results2) => {
         if (error) {
           return res.status(500).send({
